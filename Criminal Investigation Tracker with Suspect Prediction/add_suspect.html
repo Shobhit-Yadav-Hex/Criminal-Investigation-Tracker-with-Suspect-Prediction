@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Suspect - Criminal Investigation System</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background: #0a0a0a;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(255, 0, 0, .03) 25%, rgba(255, 0, 0, .03) 26%, transparent 27%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 255, 0, .03) 25%, rgba(0, 255, 0, .03) 26%, transparent 27%, transparent);
+            background-size: 50px 50px;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        
+        .navbar-custom {
+            background: linear-gradient(135deg, #1a0000 0%, #000 100%);
+            box-shadow: 0 2px 20px rgba(255, 0, 0, 0.3);
+            padding: 15px 0;
+            border-bottom: 2px solid #ff0000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: #00ff00 !important;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #00ff00;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-nav {
+            width: 40px;
+            height: 40px;
+        }
+
+        .logo-nav svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 5px #00ff00);
+        }
+        
+        .nav-link {
+            color: #888 !important;
+            font-weight: 500;
+            margin: 0 10px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000 !important;
+            border-color: #ff0000;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #000 !important;
+            font-weight: 700;
+            border-color: #ff0000;
+        }
+        
+        .btn-logout {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #000;
+            border: 2px solid #ff0000;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            background: #000;
+            color: #ff0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.5);
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.2);
+            margin-bottom: 30px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #000;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+            border: none;
+            font-weight: 700;
+        }
+        
+        .suspect-card {
+            border-left: 4px solid #00ff00;
+            transition: all 0.3s ease;
+            background: #0a0a0a;
+        }
+        
+        .suspect-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 255, 0, 0.3);
+            border-left-color: #ff0000;
+        }
+
+        .suspect-card .card-body {
+            color: #888;
+        }
+
+        .suspect-card .card-title {
+            color: #00ff00 !important;
+        }
+
+        .suspect-card strong {
+            color: #ff0000;
+        }
+        
+        .badge-custom {
+            font-size: 0.9rem;
+            padding: 8px 15px;
+        }
+
+        .form-label {
+            color: #00ff00;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .form-control, .form-select, textarea {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            color: #00ff00;
+            border-radius: 8px;
+        }
+
+        .form-control::placeholder,
+        textarea::placeholder {
+            color: #555;
+        }
+
+        .form-control:focus, .form-select:focus, textarea:focus {
+            background: #000;
+            border-color: #ff0000;
+            color: #00ff00;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: #0a0a0a !important;
+            background-image: none !important;
+            padding-right: 12px;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            border: 2px solid #00ff00;
+            padding: 12px 40px;
+            font-weight: 700;
+            color: #000;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .btn-submit:hover {
+            background: #000;
+            color: #00ff00;
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #555;
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        
+        .admin-badge {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid #ff0000;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border: 2px solid #ff0000;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .btn-danger:hover {
+            background: #000;
+            color: #ff0000;
+        }
+
+        .btn-outline-danger {
+            background: transparent;
+            border: 2px solid #ff0000;
+            color: #ff0000;
+        }
+
+        .btn-outline-danger:hover {
+            background: #ff0000;
+            color: #000;
+        }
+
+        .badge.bg-dark {
+            background: #000 !important;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+
+        .text-white a {
+            color: #00ff00 !important;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .text-white a:hover {
+            color: #ff0000 !important;
+        }
+    
+        /* Remove number input arrows completely */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            display: none;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* Encrypted data stream background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 0, 0.03) 2px,
+                    rgba(0, 255, 0, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: '⚡ ENCRYPTED STREAM: 0x7F4A9B2E | 0x3D8C1F5A | 0x9E2B7C4D | 0x5A1F8E3B | 0x2C9D4A7E | 0x8B3F1C5D | 0x4E7A2D9B | 0x1C5F8A3E | 0x7D9B2C4A | 0x3E1F5A8D | SECURE CONNECTION | AES-256 ENCRYPTION | STATUS: ACTIVE ⚡';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: rgba(0, 255, 0, 0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(0, 255, 0, 0.3);
+            animation: scrollText 25s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .main-container, .login-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Encrypted background pattern for inputs */
+        .form-control,
+        .form-select,
+        textarea {
+            position: relative;
+            background: 
+                linear-gradient(90deg, #0a0a0a 0%, #0d0d0d 50%, #0a0a0a 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 8px,
+                    rgba(0, 255, 0, 0.03) 8px,
+                    rgba(0, 255, 0, 0.03) 9px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 8px,
+                    rgba(255, 0, 0, 0.02) 8px,
+                    rgba(255, 0, 0, 0.02) 9px
+                );
+            background-size: 100% 100%, 16px 100%, 100% 16px;
+            overflow: hidden;
+        }
+
+        .form-control::after,
+        .form-select::after,
+        textarea::after {
+            content: '01001000 01100101 01101100 01101100 01101111 01010111 01101111 01110010 01101100 01100100';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            color: rgba(0, 255, 0, 0.05);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 0;
+        }
+
+        /* Matrix rain effect on cards */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                rgba(255, 0, 0, 0.1), 
+                rgba(0, 255, 0, 0.1), 
+                rgba(255, 0, 0, 0.1));
+            border-radius: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        .card:hover::before {
+            opacity: 0.2;
+            animation: borderPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Encrypted text overlay on navbar */
+        .navbar-custom::after {
+            content: '[ 🔒 SECURE CONNECTION ] [ ENCRYPTION: AES-256 ] [ STATUS: ✅ ACTIVE ]';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            color: rgba(0, 255, 0, 0.25);
+            text-align: center;
+            padding: 2px;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+        }
+
+        .navbar-custom {
+            position: relative;
+            padding-top: 25px !important;
+        }
+
+        /* Glitch effect for logo */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-1px, 1px); }
+            40% { transform: translate(-1px, -1px); }
+            60% { transform: translate(1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
+
+        .logo-nav:hover svg {
+            animation: glitch 0.3s ease-in-out;
+        }
+
+        /* Scan line effect */
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .login-card::after,
+        .card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 255, 0, 0.5), 
+                transparent);
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Add position relative to cards */
+        .card, .login-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hex code background pattern */
+        .empty-state::before {
+            content: 'HEX: 0xFF0000 | RGB: (255,0,0) | HEX: 0x00FF00 | RGB: (0,255,0) | STATUS: WAITING FOR DATA INPUT';
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: rgba(0, 255, 0, 0.15);
+            top: 30%;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .empty-state {
+            position: relative;
+        }
+
+    
+        /* Image upload and preview styles */
+        input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+            color: #000;
+            border: 2px solid #00ff00;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: all 0.3s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: #000;
+            color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .image-preview-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            display: block;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff0000;
+            color: #000;
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .remove-image:hover {
+            background: #000;
+            color: #ff0000;
+            transform: rotate(90deg);
+        }
+
+        .suspect-image-display {
+            max-width: 100px;
+            max-height: 100px;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .suspect-image-display:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .evidence-badge {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-left: 10px;
+            border: 1px solid #00ff00;
+        }
+
+        /* Modal styles for full image view */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            animation: fadeIn 0.3s;
+        }
+
+        .image-modal-content {
+            position: relative;
+            margin: 5% auto;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .image-modal img {
+            width: auto;
+            max-width: 100%;
+            max-height: 85vh;
+            border: 3px solid #00ff00;
+            border-radius: 10px;
+            box-shadow: 0 0 50px rgba(0, 255, 0, 0.5);
+        }
+
+        .image-modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: #ff0000;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            text-shadow: 0 0 10px #ff0000;
+            transition: all 0.3s;
+        }
+
+        .image-modal-close:hover {
+            color: #00ff00;
+            text-shadow: 0 0 20px #00ff00;
+            transform: rotate(90deg);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <div class="logo-nav">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 L80 25 L80 50 Q80 75 50 90 Q20 75 20 50 L20 25 Z" 
+                              fill="none" stroke="#00ff00" stroke-width="3"/>
+                        <path d="M50 15 L75 27 L75 50 Q75 70 50 83 Q25 70 25 50 L25 27 Z" 
+                              fill="#000" stroke="#ff0000" stroke-width="2"/>
+                        <ellipse cx="50" cy="50" rx="15" ry="20" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+                        <rect x="46" y="55" width="8" height="10" fill="#ff0000" rx="1"/>
+                        <rect x="45" y="48" width="10" height="8" fill="none" stroke="#00ff00" stroke-width="2" rx="4"/>
+                    </svg>
+                </div>
+                CIS Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border-color: #ff0000;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="add_suspect.html">📝 Add Suspect</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="view_suspects.html">👁️ View Suspects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="predict_suspect.html">🎯 Predict Suspect</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="history.html">📜 View History</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="me-3" style="color: #00ff00;"><strong>👨‍💼 <span id="adminName">Admin</span></strong> <span class="admin-badge ms-2">ADMIN</span></span>
+                    <button class="btn btn-logout" onclick="logout()">🚪 Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Input Form Section -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">📋 Add Suspect Information</h3>
+            </div>
+            <div class="card-body p-4">
+                <form id="suspectForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectName" class="form-label">◆ Full Name *</label>
+                            <input type="text" class="form-control" id="suspectName" placeholder="Enter suspect's full name" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectAge" class="form-label">◆ Age *</label>
+                            <input type="number" class="form-control" id="suspectAge" placeholder="Enter age" min="1" max="150" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectDOB" class="form-label">◆ Date of Birth *</label>
+                            <input type="date" class="form-control" id="suspectDOB" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectGender" class="form-label">◆ Gender</label>
+                            <select class="form-select" id="suspectGender">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectAddress" class="form-label">◆ Address</label>
+                            <input type="text" class="form-control" id="suspectAddress" placeholder="Enter address">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectCrime" class="form-label">◆ Crime Type</label>
+                            <select class="form-select" id="suspectCrime">
+                                <option value="">Select Crime Type</option>
+                                <option value="Theft">Theft</option>
+                                <option value="Assault">Assault</option>
+                                <option value="Fraud">Fraud</option>
+                                <option value="Burglary">Burglary</option>
+                                <option value="Vandalism">Vandalism</option>
+                                <option value="Murder">Murder</option>
+                                <option value="Robbery">Robbery</option>
+                                <option value="Kidnapping">Kidnapping</option>
+                                <option value="Drug Trafficking">Drug Trafficking</option>
+                                <option value="Cybercrime">Cybercrime</option>
+                                <option value="Money Laundering">Money Laundering</option>
+                                <option value="Sexual Assault">Sexual Assault</option>
+                                <option value="Arson">Arson</option>
+                                <option value="Human Trafficking">Human Trafficking</option>
+                                <option value="Extortion">Extortion</option>
+                                <option value="Smuggling">Smuggling</option>
+                                <option value="Terrorism">Terrorism</option>
+                                <option value="Forgery">Forgery</option>
+                                <option value="Blackmail">Blackmail</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12 mb-3">
+                            <label for="suspectDescription" class="form-label">◆ Description / Additional Notes</label>
+                            <textarea class="form-control" id="suspectDescription" rows="3" placeholder="Enter any additional details about the suspect..."></textarea>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectImage" class="form-label">◆ Criminal Photo</label>
+                            <input type="file" class="form-control" id="suspectImage" accept="image/*">
+                            <small class="text-muted">Upload suspect's photograph (optional)</small>
+                            <div id="imagePreview" class="mt-2"></div>
+                        </div>
+                        
+
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-submit btn-lg">
+                            ✅ Add Suspect to Database
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Display Section -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="mb-0">📋 Recent Suspects</h3>
+                <button class="btn btn-danger btn-sm" id="clearAll">
+                    🗑️ Clear All Records
+                </button>
+            </div>
+            <div class="card-body p-4">
+                <div id="suspectList">
+                    <div class="empty-state">
+                        <div>👮</div>
+                        <h5>No suspects recorded yet</h5>
+                        <p>Add suspect information using the form above</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Check if user is logged in as admin
+        window.onload = function() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            const userRole = sessionStorage.getItem('userRole');
+            const username = sessionStorage.getItem('username');
+            
+            if (!isLoggedIn || userRole !== 'admin') {
+                alert('⚠️ Access Denied! Admin access required.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('adminName').textContent = username;
+            displaySuspects();
+        };
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Get suspects from localStorage or initialize empty array
+        let suspects = JSON.parse(localStorage.getItem('suspects')) || [];
+        
+        // Get history from localStorage or initialize empty array
+        let history = JSON.parse(localStorage.getItem('history')) || [];
+
+        // Function to add history entry
+        function addHistory(action, suspectName, details = '') {
+            const entry = {
+                action: action,
+                suspectName: suspectName,
+                details: details,
+                timestamp: new Date().toISOString(),
+                user: sessionStorage.getItem('username') || 'Admin'
+            };
+            history.push(entry);
+            localStorage.setItem('history', JSON.stringify(history));
+        }
+
+        // Function to save suspects to localStorage
+        function saveSuspects() {
+            localStorage.setItem('suspects', JSON.stringify(suspects));
+        }
+
+        // Function to format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Function to display all suspects
+        function displaySuspects() {
+            const suspectList = document.getElementById('suspectList');
+            
+            if (suspects.length === 0) {
+                suspectList.innerHTML = `
+                    <div class="empty-state">
+                        <div>👮</div>
+                        <h5>No suspects recorded yet</h5>
+                        <p>Add suspect information using the form above</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Show only last 6 suspects
+            const recentSuspects = suspects.slice(-6).reverse();
+            let html = '<div class="row">';
+            
+            recentSuspects.forEach((suspect, displayIndex) => {
+                const actualIndex = suspects.length - 1 - displayIndex;
+                const crimeColor = suspect.crime ? 'danger' : 'secondary';
+                html += `
+                    <div class="col-md-6 mb-4">
+                        <div class="card suspect-card h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <h5 class="card-title mb-0">
+                                        <span class="badge bg-dark">ID: ${actualIndex + 1}</span>
+                                        ${suspect.name}
+                                        ${suspect.evidenceImage ? '<span class="evidence-badge">📁 Evidence</span>' : ''}
+                                    </h5>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSuspect(${actualIndex})">
+                                        ❌
+                                    </button>
+                                </div>
+                                
+                                ${suspect.suspectImage ? `
+                                    <div class="mb-3">
+                                        <img src="${suspect.suspectImage}" class="suspect-image-display" 
+                                             onclick="viewFullImage('${suspect.suspectImage}', 'Suspect Photo: ${suspect.name}')" 
+                                             alt="Suspect Photo">
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="mb-2">
+                                    <strong>Age:</strong> ${suspect.age} years
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <strong>Date of Birth:</strong> ${formatDate(suspect.dob)}
+                                </div>
+                                
+                                ${suspect.gender ? `
+                                    <div class="mb-2">
+                                        <strong>Gender:</strong> ${suspect.gender}
+                                    </div>
+                                ` : ''}
+                                
+                                ${suspect.address ? `
+                                    <div class="mb-2">
+                                        <strong>Address:</strong> ${suspect.address}
+                                    </div>
+                                ` : ''}
+                                
+                                ${suspect.crime ? `
+                                    <div class="mb-2">
+                                        <strong>Crime Type:</strong> 
+                                        <span class="badge bg-${crimeColor} badge-custom">${suspect.crime}</span>
+                                    </div>
+                                ` : ''}
+                                
+                                ${suspect.description ? `
+                                    <div class="mt-3">
+                                        <strong>Description:</strong>
+                                        <p class="text-muted mb-0 mt-1">${suspect.description}</p>
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="mt-3 text-muted small">
+                                    <em>Added: ${new Date(suspect.timestamp).toLocaleString()}</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            if (suspects.length > 6) {
+                html += `<p class="text-center text-white"><a href="view_suspects.html">View all ${suspects.length} suspects →</a></p>`;
+            }
+            suspectList.innerHTML = html;
+        }
+
+        // Function to delete a suspect
+        function deleteSuspect(index) {
+            if (confirm('Are you sure you want to delete this suspect record?')) {
+                const deletedSuspect = suspects[index];
+                addHistory('DELETE', deletedSuspect.name, `Deleted suspect: ${deletedSuspect.name}, Age: ${deletedSuspect.age}, Crime: ${deletedSuspect.crime || 'N/A'}`);
+                suspects.splice(index, 1);
+                saveSuspects();
+                displaySuspects();
+            }
+        }
+
+
+        // Image preview handlers
+        document.getElementById('suspectImage').addEventListener('change', function(e) {
+            handleImagePreview(e, 'imagePreview', 'suspectImageData');
+        });
+
+function handleImagePreview(event, previewId, dataKey) {
+            const file = event.target.files[0];
+            const preview = document.getElementById(previewId);
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    window[dataKey] = e.target.result;
+                    preview.innerHTML = `
+                        <div class="image-preview-container">
+                            <img src="${e.target.result}" class="image-preview" alt="Preview">
+                            <div class="remove-image" onclick="removeImage('${previewId}', '${event.target.id}', '${dataKey}')">✕</div>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage(previewId, inputId, dataKey) {
+            document.getElementById(previewId).innerHTML = '';
+            document.getElementById(inputId).value = '';
+            window[dataKey] = null;
+        }
+
+        function viewFullImage(imageSrc, title) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalImageTitle');
+            
+            modal.style.display = 'block';
+            modalImg.src = imageSrc;
+            modalTitle.textContent = title;
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('imageModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Initialize image data
+        window.suspectImageData = null;
+
+        // Form submission handler
+        document.getElementById('suspectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const suspect = {
+                name: document.getElementById('suspectName').value,
+                age: document.getElementById('suspectAge').value,
+                dob: document.getElementById('suspectDOB').value,
+                gender: document.getElementById('suspectGender').value,
+                address: document.getElementById('suspectAddress').value,
+                crime: document.getElementById('suspectCrime').value,
+                description: document.getElementById('suspectDescription').value,
+                suspectImage: window.suspectImageData || null,
+                timestamp: new Date().toISOString()
+            };
+            
+            suspects.push(suspect);
+            saveSuspects();
+            
+            // Add to history
+            addHistory('ADD', suspect.name, `Added new suspect: ${suspect.name}, Age: ${suspect.age}, Crime: ${suspect.crime || 'N/A'}`);
+            
+            displaySuspects();
+            this.reset();
+            document.getElementById('imagePreview').innerHTML = '';
+            window.suspectImageData = null;
+            alert('✅ Suspect information added successfully!');
+            document.getElementById('suspectList').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Clear all records
+        document.getElementById('clearAll').addEventListener('click', function() {
+            if (confirm('⚠️ Are you sure you want to delete ALL suspect records? This cannot be undone!')) {
+                addHistory('CLEAR_ALL', 'System', `Cleared all ${suspects.length} suspect records from database`);
+                suspects = [];
+                saveSuspects();
+                displaySuspects();
+                alert('All records have been cleared.');
+            }
+        });
+    </script>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <div class="image-modal-content">
+            <span class="image-modal-close" onclick="closeImageModal()">&times;</span>
+            <h3 id="modalImageTitle" style="color: #00ff00; text-align: center; margin-bottom: 20px;"></h3>
+            <div style="text-align: center;">
+                <img id="modalImage" src="" alt="Full view">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

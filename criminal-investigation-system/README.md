@@ -132,5 +132,5 @@ criminal-investigation-system/
 
 ## 👤 Author
 
-Made by **YOUR NAME**
+Made by **Shubham Yadav**
 GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)

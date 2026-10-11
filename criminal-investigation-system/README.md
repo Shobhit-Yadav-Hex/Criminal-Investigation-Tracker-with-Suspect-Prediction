@@ -132,5 +132,5 @@ criminal-investigation-system/
 
 ## 👤 Author
 
-Made by **YOUR NAME**
-GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
+Made by Shubham Yadav (Shobhit)
+GitHub:https://github.com/Shobhit-Yadav-Hex

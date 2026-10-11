@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predict Suspect - Criminal Investigation System</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+        <!-- Custom CSS -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0a;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(255, 0, 0, .03) 25%, rgba(255, 0, 0, .03) 26%, transparent 27%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 255, 0, .03) 25%, rgba(0, 255, 0, .03) 26%, transparent 27%, transparent);
+            background-size: 50px 50px;
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        
+        .navbar-custom {
+            background: linear-gradient(135deg, #1a0000 0%, #000 100%);
+            box-shadow: 0 2px 20px rgba(255, 0, 0, 0.3);
+            padding: 15px 0;
+            border-bottom: 2px solid #ff0000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: #00ff00 !important;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #00ff00;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-nav {
+            width: 40px;
+            height: 40px;
+        }
+
+        .logo-nav svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 5px #00ff00);
+        }
+        
+        .nav-link {
+            color: #888 !important;
+            font-weight: 500;
+            margin: 0 10px;
+            padding: 8px 20px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000 !important;
+            border-color: #ff0000;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #000 !important;
+            font-weight: 700;
+            border-color: #ff0000;
+        }
+        
+        .btn-logout {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #000;
+            border: 2px solid #ff0000;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            background: #000;
+            color: #ff0000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.5);
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.2);
+            margin-bottom: 30px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+            color: #000;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px;
+            border: none;
+            font-weight: 700;
+        }
+        
+        .suspect-card {
+            border-left: 4px solid #00ff00;
+            transition: all 0.3s ease;
+            background: #0a0a0a;
+        }
+        
+        .suspect-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9), 0 0 30px rgba(0, 255, 0, 0.3);
+            border-left-color: #ff0000;
+        }
+
+        .suspect-card .card-body {
+            color: #888;
+        }
+
+        .suspect-card .card-title {
+            color: #00ff00 !important;
+        }
+
+        .suspect-card strong {
+            color: #ff0000;
+        }
+        
+        .badge-custom {
+            font-size: 0.9rem;
+            padding: 8px 15px;
+        }
+
+        .form-label {
+            color: #00ff00;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .form-control, .form-select, textarea {
+            background: #0a0a0a;
+            border: 2px solid #333;
+            color: #00ff00;
+            border-radius: 8px;
+        }
+
+        .form-control::placeholder,
+        textarea::placeholder {
+            color: #555;
+        }
+
+        .form-control:focus, .form-select:focus, textarea:focus {
+            background: #000;
+            border-color: #ff0000;
+            color: #00ff00;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+        }
+
+        .form-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: #0a0a0a !important;
+            background-image: none !important;
+            padding-right: 12px;
+        }
+        
+        .btn-submit, .btn-primary {
+            background: linear-gradient(135deg, #00ff00 0%, #00cc00 100%);
+            border: 2px solid #00ff00;
+            padding: 12px 40px;
+            font-weight: 700;
+            color: #000;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        
+        .btn-submit:hover, .btn-primary:hover {
+            background: #000;
+            color: #00ff00;
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #555;
+        }
+        
+        .admin-badge, .officer-badge {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border: 1px solid #ff0000;
+        }
+
+        .officer-badge {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+            border-color: #00ff00;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            border: 2px solid #ff0000;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .btn-danger:hover {
+            background: #000;
+            color: #ff0000;
+        }
+
+        .btn-outline-danger {
+            background: transparent;
+            border: 2px solid #ff0000;
+            color: #ff0000;
+        }
+
+        .btn-outline-danger:hover {
+            background: #ff0000;
+            color: #000;
+        }
+
+        .badge.bg-dark {
+            background: #000 !important;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+
+        .badge.bg-danger {
+            background: linear-gradient(135deg, #ff0000, #cc0000) !important;
+            color: #000;
+            border: 1px solid #ff0000;
+        }
+
+        .badge.bg-success {
+            background: linear-gradient(135deg, #00ff00, #00cc00) !important;
+            color: #000;
+            border: 1px solid #00ff00;
+        }
+
+        .text-white a, .text-center a {
+            color: #00ff00 !important;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .text-white a:hover {
+            color: #ff0000 !important;
+        }
+
+        .stat-box {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+            border: 2px solid #333;
+        }
+
+        .stat-box h4 {
+            color: #00ff00;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .stat-box p {
+            color: #888;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .text-muted {
+            color: #ffffff !important;
+        }
+
+        .stat-number {
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px #00ff00;
+            margin-bottom: 5px;
+        }
+
+        .log-item {
+            background: #0a0a0a;
+            border-left: 3px solid #00ff00;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+
+        .log-item strong {
+            color: #ff0000;
+        }
+
+        .log-item small {
+            color: #888;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #555, #333);
+            border: 2px solid #666;
+            color: #00ff00;
+        }
+
+        .btn-secondary:hover {
+            background: #000;
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #00ff00, #00cc00);
+            border: 2px solid #00ff00;
+            color: #000;
+        }
+
+        .btn-success:hover {
+            background: #000;
+            color: #00ff00;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            filter: invert(1) hue-rotate(180deg);
+        }
+
+        .navbar-toggler {
+            border-color: #ff0000 !important;
+        }
+
+        .navbar-toggler-icon {
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(-60deg);
+        }
+
+        h1, h2, h3, h4, h5 {
+            color: #00ff00;
+        }
+
+        .alert {
+            background: #1a1a1a;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+        }
+
+        .alert-danger {
+            border-color: #ff0000;
+            color: #ff0000;
+        }
+
+        .alert-success {
+            border-color: #00ff00;
+            color: #00ff00;
+        }
+    
+        /* Remove number input arrows completely */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+            display: none;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* Encrypted data stream background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 0, 0.03) 2px,
+                    rgba(0, 255, 0, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.5;
+        }
+
+        body::after {
+            content: '⚡ ENCRYPTED STREAM: 0x7F4A9B2E | 0x3D8C1F5A | 0x9E2B7C4D | 0x5A1F8E3B | 0x2C9D4A7E | 0x8B3F1C5D | 0x4E7A2D9B | 0x1C5F8A3E | 0x7D9B2C4A | 0x3E1F5A8D | SECURE CONNECTION | AES-256 ENCRYPTION | STATUS: ACTIVE ⚡';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            color: rgba(0, 255, 0, 0.3);
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-top: 1px solid rgba(0, 255, 0, 0.3);
+            animation: scrollText 25s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .main-container, .login-container {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Encrypted background pattern for inputs */
+        .form-control,
+        .form-select,
+        textarea {
+            position: relative;
+            background: 
+                linear-gradient(90deg, #0a0a0a 0%, #0d0d0d 50%, #0a0a0a 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    transparent,
+                    transparent 8px,
+                    rgba(0, 255, 0, 0.03) 8px,
+                    rgba(0, 255, 0, 0.03) 9px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 8px,
+                    rgba(255, 0, 0, 0.02) 8px,
+                    rgba(255, 0, 0, 0.02) 9px
+                );
+            background-size: 100% 100%, 16px 100%, 100% 16px;
+            overflow: hidden;
+        }
+
+        .form-control::after,
+        .form-select::after,
+        textarea::after {
+            content: '01001000 01100101 01101100 01101100 01101111 01010111 01101111 01110010 01101100 01100100';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            color: rgba(0, 255, 0, 0.05);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 0;
+        }
+
+        /* Matrix rain effect on cards */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, 
+                rgba(255, 0, 0, 0.1), 
+                rgba(0, 255, 0, 0.1), 
+                rgba(255, 0, 0, 0.1));
+            border-radius: 15px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+            filter: blur(10px);
+        }
+
+        .card:hover::before {
+            opacity: 0.2;
+            animation: borderPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes borderPulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Encrypted text overlay on navbar */
+        .navbar-custom::after {
+            content: '[ 🔒 SECURE CONNECTION ] [ ENCRYPTION: AES-256 ] [ STATUS: ✅ ACTIVE ]';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+            font-size: 8px;
+            color: rgba(0, 255, 0, 0.25);
+            text-align: center;
+            padding: 2px;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.5);
+            border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+        }
+
+        .navbar-custom {
+            position: relative;
+            padding-top: 25px !important;
+        }
+
+        /* Glitch effect for logo */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-1px, 1px); }
+            40% { transform: translate(-1px, -1px); }
+            60% { transform: translate(1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0); }
+        }
+
+        .logo-nav:hover svg {
+            animation: glitch 0.3s ease-in-out;
+        }
+
+        /* Scan line effect */
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+
+        .login-card::after,
+        .card::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(0, 255, 0, 0.5), 
+                transparent);
+            animation: scan 3s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        /* Add position relative to cards */
+        .card, .login-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Hex code background pattern */
+        .empty-state::before {
+            content: 'HEX: 0xFF0000 | RGB: (255,0,0) | HEX: 0x00FF00 | RGB: (0,255,0) | STATUS: WAITING FOR DATA INPUT';
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            color: rgba(0, 255, 0, 0.15);
+            top: 30%;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .empty-state {
+            position: relative;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+<div class="logo-nav">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 10 L80 25 L80 50 Q80 75 50 90 Q20 75 20 50 L20 25 Z" 
+                              fill="none" stroke="#00ff00" stroke-width="3"/>
+                        <path d="M50 15 L75 27 L75 50 Q75 70 50 83 Q25 70 25 50 L25 27 Z" 
+                              fill="#000" stroke="#ff0000" stroke-width="2"/>
+                        <ellipse cx="50" cy="50" rx="15" ry="20" fill="none" stroke="#00ff00" stroke-width="1.5"/>
+                        <rect x="46" y="55" width="8" height="10" fill="#ff0000" rx="1"/>
+                        <rect x="45" y="48" width="10" height="8" fill="none" stroke="#00ff00" stroke-width="2" rx="4"/>
+                    </svg>
+                </div>
+                🔍 CIS Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto" id="navMenu">
+                </ul>
+                <div class="d-flex align-items-center">
+                    <span class="me-3" style="color: #00ff00;"><strong><span id="userIcon">👤</span> <span id="userName">User</span></strong> <span class="user-badge ms-2" id="userRole">USER</span></span>
+                    <button class="btn btn-logout" onclick="logout()">🚪 Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <!-- Statistics Section -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalSuspects">0</div>
+                    <div class="text-muted">Total Suspects</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number" id="totalCrimes">0</div>
+                    <div class="text-muted">Crime Records</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number" id="avgAge">0</div>
+                    <div class="text-muted">Avg Age</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-number" id="predictions">0</div>
+                    <div class="text-muted">Predictions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prediction Form -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">🔮 Crime Pattern Analysis</h3>
+            </div>
+            <div class="card-body p-4">
+                <form id="predictionForm">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="crimeType" class="form-label fw-bold">Crime Type *</label>
+                            <select class="form-select" id="crimeType" required>
+                                <option value="">Select Crime Type</option>
+                                <option value="Theft">Theft</option>
+                                <option value="Assault">Assault</option>
+                                <option value="Fraud">Fraud</option>
+                                <option value="Burglary">Burglary</option>
+                                <option value="Vandalism">Vandalism</option>
+                                <option value="Murder">Murder</option>
+                                <option value="Robbery">Robbery</option>
+                                <option value="Kidnapping">Kidnapping</option>
+                                <option value="Drug Trafficking">Drug Trafficking</option>
+                                <option value="Cybercrime">Cybercrime</option>
+                                <option value="Money Laundering">Money Laundering</option>
+                                <option value="Sexual Assault">Sexual Assault</option>
+                                <option value="Arson">Arson</option>
+                                <option value="Human Trafficking">Human Trafficking</option>
+                                <option value="Extortion">Extortion</option>
+                                <option value="Smuggling">Smuggling</option>
+                                <option value="Terrorism">Terrorism</option>
+                                <option value="Forgery">Forgery</option>
+                                <option value="Blackmail">Blackmail</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="crimeLocation" class="form-label fw-bold">Crime Location</label>
+                            <input type="text" class="form-control" id="crimeLocation" placeholder="Enter location">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectAgeRange" class="form-label fw-bold">Suspect Age Range</label>
+                            <select class="form-select" id="suspectAgeRange">
+                                <option value="">Any Age</option>
+                                <option value="18-25">18-25 years</option>
+                                <option value="26-35">26-35 years</option>
+                                <option value="36-45">36-45 years</option>
+                                <option value="46-60">46-60 years</option>
+                                <option value="60-100">60+ years</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="suspectGenderPred" class="form-label fw-bold">Suspect Gender</label>
+                            <select class="form-select" id="suspectGenderPred">
+                                <option value="">Any Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4 ">
+                        <button  type="submit" class="btn btn-predict btn-lg text-white">
+                            🎯 Predict Suspects
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="card" id="resultsCard" style="display: none;">
+            <div class="card-header">
+                <h3 class="mb-0">📊 Prediction Results</h3>
+            </div>
+            <div class="card-body p-4">
+                <div id="predictionResults"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let userRole = '';
+        let suspects = [];
+        let predictionCount = parseInt(localStorage.getItem('predictionCount')) || 0;
+
+        window.onload = function() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+            userRole = sessionStorage.getItem('userRole');
+            const username = sessionStorage.getItem('username');
+            
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            document.getElementById('userName').textContent = username;
+            
+            if (userRole === 'admin') {
+                document.getElementById('userIcon').textContent = '👨‍💼';
+                document.getElementById('userRole').textContent = 'ADMIN';
+                document.getElementById('userRole').style.background = '#dc3545';
+            } else {
+                document.getElementById('userIcon').textContent = '👮';
+                document.getElementById('userRole').textContent = 'OFFICER';
+            }
+            
+            buildNavigation();
+            loadSuspects();
+            calculateStats();
+        };
+
+        function buildNavigation() {
+            const navMenu = document.getElementById('navMenu');
+            let navHTML = '';
+            
+            if (userRole === 'admin') {
+                navHTML = `
+                    <li class="nav-item">
+                        <a class="nav-link" href="add_suspect.html">📝 Add Suspect</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="view_suspects.html">👁️ View Suspects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="predict_suspect.html">🎯 Predict Suspect</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="history.html">📜 View History</a>
+                    </li>
+                `;
+            } else {
+                navHTML = `
+                    <li class="nav-item">
+                        <a class="nav-link" href="view_suspects.html">👁️ View Suspects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="predict_suspect.html">🎯 Predict Suspect</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="history.html">📜 View History</a>
+                    </li>
+                `;
+            }
+            
+            navMenu.innerHTML = navHTML;
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            }
+        }
+
+        function loadSuspects() {
+            suspects = JSON.parse(localStorage.getItem('suspects')) || [];
+        }
+
+        function calculateStats() {
+            document.getElementById('totalSuspects').textContent = suspects.length;
+            const withCrimes = suspects.filter(s => s.crime).length;
+            document.getElementById('totalCrimes').textContent = withCrimes;
+            
+            if (suspects.length > 0) {
+                const avgAge = Math.round(suspects.reduce((sum, s) => sum + parseInt(s.age), 0) / suspects.length);
+                document.getElementById('avgAge').textContent = avgAge;
+            }
+            
+            document.getElementById('predictions').textContent = predictionCount;
+        }
+
+        function isInAgeRange(age, range) {
+            if (!range) return true;
+            const [min, max] = range.split('-').map(n => parseInt(n));
+            return age >= min && age <= max;
+        }
+
+        function predictSuspects(crimeType, location, ageRange, gender) {
+            let matches = [];
+
+            suspects.forEach((suspect, index) => {
+                let score = 0;
+
+                if (suspect.crime && suspect.crime === crimeType) {
+                    score += 50;
+                }
+
+                if (ageRange && isInAgeRange(parseInt(suspect.age), ageRange)) {
+                    score += 25;
+                }
+
+                if (gender && suspect.gender === gender) {
+                    score += 15;
+                }
+
+                if (location && suspect.address && 
+                    suspect.address.toLowerCase().includes(location.toLowerCase())) {
+                    score += 10;
+                }
+
+                if (score > 0) {
+                    matches.push({
+                        suspect: suspect,
+                        index: index,
+                        score: score,
+                        matchPercentage: Math.min(score, 100)
+                    });
+                }
+            });
+
+            matches.sort((a, b) => b.score - a.score);
+            return matches;
+        }
+
+        function displayResults(matches, crimeType, location) {
+            const resultsDiv = document.getElementById('predictionResults');
+            const resultsCard = document.getElementById('resultsCard');
+
+            if (matches.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="alert alert-warning">
+                        <h5>⚠️ No Matching Suspects Found</h5>
+                        <p>No suspects in the database match the provided crime pattern criteria.</p>
+                    </div>
+                `;
+            } else {
+                let html = `
+                    <div class="alert alert-success">
+                        <h5>✅ Analysis Complete!</h5>
+                        <p class="mb-0">Found <strong>${matches.length}</strong> potential suspect(s) for <strong>${crimeType}</strong></p>
+                    </div>
+                `;
+
+                matches.forEach((match, i) => {
+                    const badgeColor = match.matchPercentage >= 70 ? 'danger' : 
+                                      match.matchPercentage >= 40 ? 'warning' : 'info';
+                    
+                    html += `
+                        <div class="card match-card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title mb-0">
+                                        <span class="badge bg-dark">Rank #${i + 1}</span>
+                                        ${match.suspect.name}
+                                    </h5>
+                                    <span class="badge bg-${badgeColor}" style="font-size: 1rem;">
+                                        ${match.matchPercentage}% Match
+                                    </span>
+                                </div>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <p class="mb-1"><strong>Age:</strong> ${match.suspect.age} years</p>
+                                        <p class="mb-1"><strong>DOB:</strong> ${new Date(match.suspect.dob).toLocaleDateString()}</p>
+                                        ${match.suspect.gender ? `<p class="mb-1"><strong>Gender:</strong> ${match.suspect.gender}</p>` : ''}
+                                    </div>
+                                    <div class="col-md-6">
+                                        ${match.suspect.crime ? `<p class="mb-1"><strong>Previous Crime:</strong> <span class="badge bg-danger">${match.suspect.crime}</span></p>` : ''}
+                                        ${match.suspect.address ? `<p class="mb-1"><strong>Address:</strong> ${match.suspect.address}</p>` : ''}
+                                    </div>
+                                </div>
+                                
+                                ${match.suspect.description ? `
+                                    <div class="mt-2">
+                                        <strong>Notes:</strong>
+                                        <p class="text-muted mb-0">${match.suspect.description}</p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                resultsDiv.innerHTML = html;
+            }
+
+            resultsCard.style.display = 'block';
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        document.getElementById('predictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const crimeType = document.getElementById('crimeType').value;
+            const location = document.getElementById('crimeLocation').value;
+            const ageRange = document.getElementById('suspectAgeRange').value;
+            const gender = document.getElementById('suspectGenderPred').value;
+
+            const matches = predictSuspects(crimeType, location, ageRange, gender);
+            displayResults(matches, crimeType, location);
+
+            // Add to history
+            let history = JSON.parse(localStorage.getItem('history')) || [];
+            history.push({
+                action: 'PREDICTION',
+                suspectName: 'System',
+                details: `Predicted suspects for ${crimeType} crime. Found ${matches.length} match(es).`,
+                timestamp: new Date().toISOString(),
+                user: sessionStorage.getItem('username')
+            });
+            localStorage.setItem('history', JSON.stringify(history));
+
+            predictionCount++;
+            localStorage.setItem('predictionCount', predictionCount);
+            calculateStats();
+        });
+    </script>
+</body>
+</html>
